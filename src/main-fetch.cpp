@@ -9,9 +9,8 @@
  */
 #include <Arduino.h>
 #include <CH_AS1100.h>
+#include <pins.h>
 
-// top panel
-#define LOAD_PIN 5 // D1 mini
 // panel length
 #define NUM_CHIPS 32
 Panel topRow = Panel(LOAD_PIN, NUM_CHIPS);

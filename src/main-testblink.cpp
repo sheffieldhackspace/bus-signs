@@ -5,17 +5,10 @@
 
 #include "Arduino.h"
 #include <CH_AS1100.h>
-
-// top panel
-#define LOAD_PIN 4 // blue/D2 on D1 mini
-// #define LOAD_PIN 7 // Arduino
-
-// bottom panel
-#define LOAD_PIN_2 5 // orange/D1 on D1 mini
+#include <pins.h>
 
 // panel length
 #define NUM_CHIPS 32
-
 Panel topRow = Panel(LOAD_PIN, NUM_CHIPS);
 // Panel bottomRow = Panel(LOAD_PIN_2, NUM_CHIPS);
 
