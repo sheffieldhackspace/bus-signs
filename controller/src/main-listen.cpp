@@ -11,7 +11,8 @@ SoftwareSerial link(3, 4); // Rx, Tx
 String message;
 
 void setup() {
-  link.begin(9600);   // setup software serial
+  link.begin(9600); // setup software serial
+  link.listen();
   Serial.begin(9600); // setup serial monitor
   pinMode(LED_BUILTIN, OUTPUT);
 
