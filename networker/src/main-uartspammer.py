@@ -1,7 +1,7 @@
 """continually send messages over Serial, for testing"""
 
-from machine import UART, Pin
 import time
+from machine import UART, Pin
 
 led = Pin(2, Pin.OUT)
 led.off()
@@ -17,17 +17,18 @@ def send_to_sign(message):
     link.write("\0")
 
 
+MESSAGE_FLAT = [int(28282828 / (i + j + 1)) % 2 for i in range(192) for j in range(18)]
+MESSAGE_BYTELIST = [
+    int("".join(map(str, MESSAGE_FLAT[i : i + 8])), 2)
+    for i in range(0, len(MESSAGE_FLAT), 8)
+]
+
 while True:
-    time.sleep_ms(250)
+    time.sleep_ms(1000)
+    print("led on")
     led.off()
-    send_to_sign("i am a dwarf")
+    send_to_sign(bytes(MESSAGE_BYTELIST))
 
-    time.sleep_ms(250)
-    led.on()
-
-    time.sleep_ms(250)
-    led.off()
-    send_to_sign("and i am digging a hole")
-
-    time.sleep_ms(250)
+    time.sleep_ms(1000)
+    print("led off")
     led.on()

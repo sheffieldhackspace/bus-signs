@@ -36,6 +36,7 @@ source env/bin/activate
 pip install rshell
 PORT=/dev/ttyUSB0; rshell --buffer-size 512 --quiet -p $PORT
 # files on device are now at /pyboard
+# use `repl` to enter repl (CTRL+X to quit)
 ```
 
 use `rshell` to upload the `boot.py` file to the board
