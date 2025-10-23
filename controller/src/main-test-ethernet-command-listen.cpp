@@ -17,7 +17,7 @@ byte mac[] = {0x60, 0xF2, 0xEC, 0x18, 0x05, 0xFE};
 EthernetServer server(80);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // disable SD SPI
   pinMode(4, OUTPUT);

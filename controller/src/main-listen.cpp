@@ -13,7 +13,7 @@ String message;
 void processMessage(String message);
 
 void setup() {
-  link.begin(9600); // setup software serial
+  link.begin(115200); // setup software serial
   link.listen();
   Serial.begin(115200); // setup serial monitor
   pinMode(LED_BUILTIN, OUTPUT);
