@@ -1,9 +1,11 @@
 /**
- * Ethernet test - fetch
+ * Ethernet test - listen
  *
  * reply to HTTP requests with a simple webpage
  * adapted from
  * https://docs.arduino.cc/tutorials/ethernet-shield-rev2/barometric-pressure-web-server/
+ *
+ * curl -i http://192.168.0.31:80
  */
 
 #include <Arduino.h>

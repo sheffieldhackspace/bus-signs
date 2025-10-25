@@ -1,5 +1,5 @@
 /**
- * Ethernet test - sign
+ * sign
  *
  * listen to telnet and send text to sign
  * send things with e.g.,
