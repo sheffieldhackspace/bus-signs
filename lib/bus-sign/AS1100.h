@@ -8,9 +8,9 @@
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
 
-class Panel : public GFXcanvas1 {
+class AS1100 : public GFXcanvas1 {
 public:
-  Panel(int LoadPin);
+  AS1100(int LoadPin);
 
   bool begin(); // initialises CLK,LOAD,DATA signal states
   void display(); // called to send pixels to the display

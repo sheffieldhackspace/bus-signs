@@ -17,22 +17,22 @@
  * alifeee - alifeee.web@outlook.com
  */
 
-#include <CH_AS1100.h>
+#include <AS1100.h>
 #include <Arduino.h>
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 
-#define ROWS_PER_CHIP 8 // there are 9 rows but only 8 used
+#define ROWS_PER_CHIP 8
 #define COLS_PER_CHIP 6
 #define LOAD_PULSE_WIDTH 2 // 3 microseconds, duration of MARK
 #define NEXT_PULSE_DELAY 1 // 1 microseconds, duration of SPACE following MARK
 
-Panel::Panel(int loadPin) : GFXcanvas1(192, 9), _loadPin(loadPin) {
+AS1100::AS1100(int loadPin) : GFXcanvas1(192, 9), _loadPin(loadPin) {
   pinMode(_loadPin, OUTPUT);
   digitalWrite(_loadPin, HIGH);
 }
 
-boolean Panel::begin() {
+boolean AS1100::begin() {
   SPI.begin();
   setClockMode(2); // reset the clock to internal
   setClockMode(0);
@@ -44,7 +44,7 @@ boolean Panel::begin() {
   return true;
 }
 
-void Panel::load() {
+void AS1100::load() {
   // load pulse causes data to be loaded and displayed if display is on
   digitalWrite(_loadPin, LOW); // transfer from shift register to display drivers buffer
   delayMicroseconds(LOAD_PULSE_WIDTH);
@@ -52,13 +52,13 @@ void Panel::load() {
   delayMicroseconds(NEXT_PULSE_DELAY);
 }
 
-void Panel::writeDigit(int digit, uint8_t d) {
+void AS1100::writeDigit(int digit, uint8_t d) {
   // d=d & 0xFF;	// mask off trash
   int dd = (digit + 1) << 8;
   write16(0x0000 | dd | d);
 }
 
-void Panel::write16(int d) {
+void AS1100::write16(int d) {
   // first 4 bits are don't care so we send zeros
   // caller must call load() if this is the last write16
   SPI.beginTransaction(SPISettings(100000, MSBFIRST, SPI_MODE3));
@@ -66,7 +66,7 @@ void Panel::write16(int d) {
   SPI.endTransaction();
 }
 
-void Panel::display() {
+void AS1100::display() {
   for (int digit = 0; digit < 8; digit++) {
     for (int chip = 0; chip < 32; chip++) {
       uint8_t value = 0;
@@ -97,7 +97,7 @@ void Panel::display() {
  *
  * The range of level is 0-32. `begin()` sets the initial intensity to 5.
  */
-void Panel::setIntensity(int level, int chipNum = -1) {
+void AS1100::setIntensity(int level, int chipNum = -1) {
   // panel only supports 16 intensity levels
   // if chipNum>-1 only affects that chip
   if (level < 0 && level > 15)
@@ -131,7 +131,7 @@ void Panel::setIntensity(int level, int chipNum = -1) {
  * Note that the code does not check if the length of chips is correct
  */
 
-void Panel::setIndividualIntensity(int chips[]) {
+void AS1100::setIndividualIntensity(int chips[]) {
   // chip[s is an array of intensity values, one per chip
   for (int i = 32 - 1; i >= 0; i--)
     write16(0x0A00 + (chips[i] & 15));
@@ -141,7 +141,7 @@ void Panel::setIndividualIntensity(int chips[]) {
 /**
  * @brief sends the same command to all chips followed by load()
  */
-void Panel::sendCmd(int data) {
+void AS1100::sendCmd(int data) {
   // workhorse for many register updates below
   // only used when all registers need to contain the same value
   for (int chip = 0; chip < 32; chip++)
@@ -154,7 +154,7 @@ void Panel::sendCmd(int data) {
  *
  * This funcion is also used to reset the display. See datasheet, section 8.10.
  */
-void Panel::setClockMode(int m) {
+void AS1100::setClockMode(int m) {
   sendCmd(0x0E00 + (m & 3));
 }
 
@@ -167,7 +167,7 @@ void Panel::setClockMode(int m) {
  * The panel can still be programmed whilst the display is off it just won't appear till you turn the display on again.
  */
 
-void Panel::displayOn(int state) {
+void AS1100::displayOn(int state) {
   if (state != 0)
     sendCmd(0x0C01);
   else
@@ -181,7 +181,7 @@ void Panel::displayOn(int state) {
  *
  * It's useful to check that you don't have any burned out LEDs.
  */
-void Panel::displayTest(bool state) {
+void AS1100::displayTest(bool state) {
   // panel is turned on if state is non-zero, otherwise off
   if (state)
     sendCmd(0x0F01);
@@ -199,7 +199,7 @@ void Panel::displayTest(bool state) {
  *
  * See datasheet section 9.3
  */
-void Panel::setBinaryMode() {
+void AS1100::setBinaryMode() {
   sendCmd(0x0900);
 }
 
@@ -210,6 +210,6 @@ void Panel::setBinaryMode() {
  * Used to configure the AS1100 number of digit lines (8). This is used by begin() so you don't need to call it.
  */
 
-void Panel::setScan(int totaldigits) {
+void AS1100::setScan(int totaldigits) {
   sendCmd(0x0B00 + ((totaldigits - 1) & 7)); // 7 means 8 blocks of 8
 }

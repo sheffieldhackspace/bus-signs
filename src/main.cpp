@@ -4,11 +4,11 @@
  */
 
 #include "Arduino.h"
-#include <CH_AS1100.h>
+#include <AS1100.h>
 #include <pins.h>
 
-Panel topRow = Panel(LOAD_PIN_TOP);
-Panel bottomRow = Panel(LOAD_PIN_BOTTOM);
+AS1100 topRow = AS1100(LOAD_PIN_TOP);
+AS1100 bottomRow = AS1100(LOAD_PIN_BOTTOM);
 
 void setup() {
   Serial.begin(115200);
