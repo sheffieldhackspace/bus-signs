@@ -12,11 +12,10 @@ class AS1100 : public GFXcanvas1 {
 public:
   AS1100(int LoadPin);
 
-  bool begin(); // initialises CLK,LOAD,DATA signal states
-  void display(); // called to send pixels to the display
+  void begin();
+  void display();
 
   void setClockMode(int m);
-  void displayTest(bool state); // all leds turned on if state is true, off if false
   void setBinaryMode();
   void setScan(int totaldigits);
   void setIntensity(int level, int chip); // sets intensity of one or all chips (-1 default)

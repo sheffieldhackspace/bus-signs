@@ -32,7 +32,7 @@ AS1100::AS1100(int loadPin) : GFXcanvas1(192, 9), _loadPin(loadPin) {
   digitalWrite(_loadPin, HIGH);
 }
 
-boolean AS1100::begin() {
+void AS1100::begin() {
   SPI.begin();
   setClockMode(2); // reset the clock to internal
   setClockMode(0);
@@ -41,7 +41,6 @@ boolean AS1100::begin() {
   setIntensity(2, -1); // start low.
   sendCmd(0x0C01); // 0x0C01 - display on, 0x0C00 - display off
   display();
-  return true;
 }
 
 void AS1100::load() {
@@ -156,21 +155,6 @@ void AS1100::sendCmd(int data) {
  */
 void AS1100::setClockMode(int m) {
   sendCmd(0x0E00 + (m & 3));
-}
-
-/**
- * @brief LED test. Regardless of programming, this turns on/off all LEDs
- *
- * on if state=true and off if state=false.
- *
- * It's useful to check that you don't have any burned out LEDs.
- */
-void AS1100::displayTest(bool state) {
-  // panel is turned on if state is non-zero, otherwise off
-  if (state)
-    sendCmd(0x0F01);
-  else
-    sendCmd(0x0F00);
 }
 
 /**
