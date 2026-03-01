@@ -38,9 +38,11 @@ void AS1100::begin() {
   sendCmd(0x0E00 + (2 & 3)); // set clock to internal
   sendCmd(0x0E00 + (0 & 3)); // set clock to external
   sendCmd(0x0900); // set binary mode
-  setScan(ROWS_PER_CHIP);
+  sendCmd(0x0B00 + ((ROWS_PER_CHIP - 1) & 7)); // 7 means 8 blocks of 8 pixels
+
   setIntensity(2, -1); // start low.
   sendCmd(0x0C01); // 0x0C01 - display on, 0x0C00 - display off
+
   display();
 }
 
@@ -136,24 +138,10 @@ void AS1100::setIndividualIntensity(int chips[]) {
   load();
 }
 
-/**
- * @brief sends the same command to all chips followed by load()
- */
 void AS1100::sendCmd(int data) {
-  // workhorse for many register updates below
-  // only used when all registers need to contain the same value
-  for (int chip = 0; chip < 32; chip++)
+  for (int chip = 0; chip < 32; chip++) {
     write16(data);
+  }
+
   load();
-}
-
-/**
- * Set the scan mode of the chips - ie,. telling them how many
- * digits lines to use
- *
- * Used to configure the AS1100 number of digit lines (8). This is used by begin() so you don't need to call it.
- */
-
-void AS1100::setScan(int totaldigits) {
-  sendCmd(0x0B00 + ((totaldigits - 1) & 7)); // 7 means 8 blocks of 8
 }
