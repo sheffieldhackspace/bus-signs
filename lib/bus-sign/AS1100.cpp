@@ -34,8 +34,8 @@ AS1100::AS1100(int loadPin) : GFXcanvas1(192, 9), _loadPin(loadPin) {
 
 void AS1100::begin() {
   SPI.begin();
-  setClockMode(2); // reset the clock to internal
-  setClockMode(0);
+  sendCmd(0x0E00 + (2 & 3)); // set clock to internal
+  sendCmd(0x0E00 + (0 & 3)); // set clock to external
   setBinaryMode();
   setScan(ROWS_PER_CHIP);
   setIntensity(2, -1); // start low.
@@ -58,8 +58,6 @@ void AS1100::writeDigit(int digit, uint8_t d) {
 }
 
 void AS1100::write16(int d) {
-  // first 4 bits are don't care so we send zeros
-  // caller must call load() if this is the last write16
   SPI.beginTransaction(SPISettings(100000, MSBFIRST, SPI_MODE3));
   SPI.transfer16(d);
   SPI.endTransaction();
@@ -146,15 +144,6 @@ void AS1100::sendCmd(int data) {
   for (int chip = 0; chip < 32; chip++)
     write16(data);
   load();
-}
-
-/**
- * The AS1100 chips can be driven by an external clock (See AS1100 data sheet). This is called by begin().
- *
- * This funcion is also used to reset the display. See datasheet, section 8.10.
- */
-void AS1100::setClockMode(int m) {
-  sendCmd(0x0E00 + (m & 3));
 }
 
 /**

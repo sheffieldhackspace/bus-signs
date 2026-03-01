@@ -15,7 +15,6 @@ public:
   void begin();
   void display();
 
-  void setClockMode(int m);
   void setBinaryMode();
   void setScan(int totaldigits);
   void setIntensity(int level, int chip); // sets intensity of one or all chips (-1 default)
