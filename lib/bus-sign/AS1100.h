@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
+#include <Adafruit_SPIDevice.h>
 
 class AS1100 : public GFXcanvas1 {
 public:
@@ -24,6 +25,7 @@ private:
   void writeDigit(int digit, uint8_t d); // used by display()
   void sendCmd(int cmdData);
 
+  Adafruit_SPIDevice _spi;
   int _loadPin = 0;
   int _clkPin = 0;
   int _dataPin = 0;

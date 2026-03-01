@@ -23,7 +23,7 @@ void setup() {
   topRow.display();
 
   bottomRow.setCursor(1, 1);
-  bottomRow.println("Well that was fast");
+  bottomRow.println("Well that was fast...");
   bottomRow.display();
 }
 
