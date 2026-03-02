@@ -11,7 +11,7 @@
 
 class AS1100 : public GFXcanvas1 {
 public:
-  AS1100(int LoadPin);
+  AS1100(int sck, int mosi, int cs);
 
   void begin();
   void display();

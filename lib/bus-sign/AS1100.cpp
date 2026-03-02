@@ -27,9 +27,9 @@
 #define LOAD_PULSE_WIDTH 2 // 3 microseconds, duration of MARK
 #define NEXT_PULSE_DELAY 1 // 1 microseconds, duration of SPACE following MARK
 
-AS1100::AS1100(int loadPin) : GFXcanvas1(192, 9),
-                              _spi(-1, SCK, -1, MOSI, 100000, SPI_BITORDER_MSBFIRST, SPI_MODE3),
-                              _loadPin(loadPin) {
+AS1100::AS1100(int sck, int mosi, int cs) : GFXcanvas1(192, 9),
+                                            _spi(-1, sck, -1, mosi, 100000, SPI_BITORDER_MSBFIRST, SPI_MODE3),
+                                            _loadPin(cs) {
   pinMode(_loadPin, OUTPUT);
   digitalWrite(_loadPin, HIGH);
 }
@@ -63,7 +63,7 @@ void AS1100::writeDigit(int digit, uint8_t d) {
 }
 
 void AS1100::write16(int d) {
-  uint8_t buf[2] = { (uint8_t)(d >> 8), (uint8_t)(d & 0xFF) };
+  uint8_t buf[2] = {(uint8_t) (d >> 8), (uint8_t) (d & 0xFF)};
   _spi.write(buf, 2);
 }
 

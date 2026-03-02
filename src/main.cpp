@@ -3,12 +3,12 @@
  * @alifeee
  */
 
-#include "Arduino.h"
-#include <AS1100.h>
-#include <pins.h>
+#include <Arduino.h>
 
-AS1100 topRow = AS1100(LOAD_PIN_TOP);
-AS1100 bottomRow = AS1100(LOAD_PIN_BOTTOM);
+#include "AS1100.h"
+
+AS1100 topRow = AS1100(D5, D6, D4);
+AS1100 bottomRow = AS1100(D8, D7, D9);
 
 void setup() {
   Serial.begin(115200);
@@ -19,11 +19,11 @@ void setup() {
   bottomRow.fillScreen(0);
 
   topRow.setCursor(1, 1);
-  topRow.println("LOL ESP32C3");
+  topRow.println("dredzik was here");
   topRow.display();
 
   bottomRow.setCursor(1, 1);
-  bottomRow.println("Well that was fast...");
+  bottomRow.println("ESP32C3");
   bottomRow.display();
 }
 
