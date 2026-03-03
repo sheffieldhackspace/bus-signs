@@ -27,24 +27,26 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SPIDevice.h>
 
+constexpr uint16_t AS1100_REG_NOOP        = 0x0000; // no operation
+constexpr uint16_t AS1100_REG_DECODE      = 0x0900; // decode mode (0x00 = binary, 0xFF = BCD)
+constexpr uint16_t AS1100_REG_INTENSITY   = 0x0A00; // brightness 0x00-0x0F, 0x00 is the brightest
+constexpr uint16_t AS1100_REG_SCAN        = 0x0B00; // scan limit (0x07 = all 8 digits)
+constexpr uint16_t AS1100_REG_SHUTDOWN    = 0x0C00; // 0x0C00 = off, 0x0C01 = on
+constexpr uint16_t AS1100_REG_TEST        = 0x0F00; // 0x0F00 = normal, 0x0F01 = test (all LEDs on)
+constexpr uint16_t AS1100_REG_CLOCK       = 0x0E00; // AS1100 only: clock mode (not in MAX7219)
+
 class AS1100 : public GFXcanvas1 {
 public:
-  AS1100(int sck, int mosi, int cs);
+  AS1100(int sck, int mosi, int latch);
 
   void begin();
   void display();
 
-  void setIntensity(int level, int chip); // sets intensity of one or all chips (-1 default)
-  void setIndividualIntensity(int chips[]); // provide an array of intensities, one per chip
-
 private:
-  void load();
-  void write16(int d);
-  void writeDigit(int digit, uint8_t d); // used by display()
+  void latch();
   void sendCmd(int cmdData);
+  void write16(int d);
 
   Adafruit_SPIDevice _spi;
-  int _loadPin = 0;
-  int _clkPin = 0;
-  int _dataPin = 0;
+  int _latch = 0;
 };
