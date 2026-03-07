@@ -1,84 +1,73 @@
 # Bus Signs
 
-Based on code from <https://github.com/ConnectedHumber/Bus-Terminal-Signs>.
+The bus signs in the space. Based on code from <https://github.com/ConnectedHumber/Bus-Terminal-Signs>.
 
-1. [Notes](#notes)
-2. [Screen size](#screen-size)
-3. [Arduino pins used](#arduino-pins-used)
-4. [Programming the Arduino](#programming-the-arduino)
-5. [Sending commands to the sign over Ethernet](#sending-commands-to-the-sign-over-ethernet)
-6. [Components for control](#components-for-control)
-   1. [Arduino Uno R3](#arduino-uno-r3)
-   2. [WizNet W5500 Ethernet Shield](#wiznet-w5500-ethernet-shield)
-   3. [Proto shield with custom sign connection](#proto-shield-with-custom-sign-connection)
-   4. [Miscellaneous bits](#miscellaneous-bits)
+## Hardware
 
-## Notes
+The microcontroller is a Seeed Studio XIAO ESP32C3. The display consists of two independent 192×9 LED matrix rows, each driven by 32 AS1100 chips.
 
-[./networker/](./networker/) is not used, but kept for posterity. It is from an old idea of using an ESP over Serial to send commands to the Arduino controlling the sign, but now we use Ethernet straight on the Arduino.
+## Running the project
 
-## Screen size
+### Prerequisites
 
-2 × [192 × 8] (actually 192×9 but only 8 drivable…?)
+* [PlatformIO](https://platformio.org/) installed
 
-## Arduino pins used
+### Installation
 
-| pin | for |
-| --- | --- |
-| 5V | power |
-| GND | GND |
-| 11 | SPI CLOCK |
-| 13 | SPI DATA OUT |
-| 5 | LOAD PIN 1 |
-| 7 | LOAD PIN 2 |
-
-## Programming the Arduino
+Flash the server environment to the device:
 
 ```bash
-# enter directory
-cd controller
-
-# upload tests to Arduino
-pio run -e blink -t upload
-pio run -e testblink -t upload
-pio run -e scrolling -t upload
-pio run -e test-ethernet-http-fetch -t upload
-pio run -e test-ethernet-http-listen -t upload
-
-# upload code to Arduino
-pio run -e test-ethernet-sign -t upload
+$ pio run -t clean -t upload -e as1100
 ```
 
-## Sending commands to the sign over Ethernet
+### Setting the status of the display
+
+Once flashed, the display will show its IP address. You can then control it via HTTP:
 
 ```bash
-# to-do
+$ curl http://ip_address:port/ --data '{
+  "top": {
+    "text": "Sheffield",
+    "flashing": false,
+    "inverted": false,
+    "horizontal_align": "left",
+    "image": "",
+    "image_width": 0,
+    "image_height": 0
+  },
+  "bottom": {
+    "text": "Hackspace",
+    "flashing": false,
+    "inverted": false,
+    "horizontal_align": "left",
+    "image": "",
+    "image_width": 0,
+    "image_height": 0
+  }
+}'
 ```
 
-## Components for control
+Both `top` and `bottom` accept the same parameters:
 
-### Arduino Uno R3
+| Parameter          | Type | Default | Description |
+|--------------------|------|---------|-------------|
+| `text`             | string | `""` | The text to display. If too long, scrolls horizontally. |
+| `flashing`         | boolean | `false` | If true, inverts colours every second producing a flashing animation. |
+| `inverted`         | boolean | `false` | Invert the colours of the display. |
+| `speed`            | integer | `5` | Scroll speed. |
+| `horizontal_align` | string | `"left"` | `"left"`, `"center"`, `"right"`. Vertical alignment is always `"middle"`. |
+| `image`            | string | `""` | Base64-encoded image (output of the image2bytes script). |
+| `image_width`      | integer | `0` | Image width in pixels. |
+| `image_height`     | integer | `0` | Image height in pixels. Max 9px. |
 
-![picture of Arduino Uno R3](images/arduino_uno_r3.png)
+### Generation of compatible image data
 
-### WizNet W5500 Ethernet Shield
+```bash
+$ ./icons/image2bytes.py ./icons/skull.gif
+```
 
-![picture of W5500 Ethernet shield](images/w5500_ethernet_shield.png)
+### Included libraries
 
-### Proto shield with custom sign connection
-
-![picture of Arduino proto shield](./images/proto_shield.jpg)
-
-See connection layout in [`layout.ods`](layout.ods). POT is a 10k potentiometer.
-
-![screenshot of spreadsheet software showing circuit layout plans](./images/layout_plan_arduino_proto_shield.png)
-
-![picture of proto board with many wires soldered to it](./images/proto_shield_with_layout.jpg)
-
-![picture of top of proto board with two sockets and a potentiometer](./images/proto_shield_with_layout_top.jpg)
-
-### Miscellaneous bits
-
-- Ethernet cable
-- USB cable
-- bus sign
+* Adafruit GFX Library - The base for our implementation
+* AS1100 - Provides an Adafruit GFX compatible driver for the bus sign display; based on the reverse engineering work of [`alifeee`](https://github.com/alifeee/bus-signs) and [`ConnectedHumber`](https://github.com/ConnectedHumber/Bus-Terminal-Signs)
+* DotWidget - Provides a standard way of building a display widget for small IoT screens

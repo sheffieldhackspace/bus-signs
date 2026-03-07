@@ -18,9 +18,6 @@ inline uint8_t getAlign(std::string_view text) {
   if (text == "left") return ALIGN_LEFT;
   if (text == "center") return ALIGN_CENTER;
   if (text == "right") return ALIGN_RIGHT;
-  if (text == "top") return ALIGN_TOP;
-  if (text == "middle") return ALIGN_MIDDLE;
-  if (text == "bottom") return ALIGN_BOTTOM;
 
   return 0;
 }
