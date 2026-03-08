@@ -66,6 +66,14 @@ Both `top` and `bottom` accept the same parameters:
 $ ./icons/image2bytes.py ./icons/skull.gif
 ```
 
+### Integration tests
+
+A test script is included that sends a series of curl requests and prompts you to verify each result visually:
+
+```bash
+$ chmod +x integration-test.sh && ./integration-test.sh 192.168.1.100
+```
+
 ### Included libraries
 
 * Adafruit GFX Library - The base for our implementation
