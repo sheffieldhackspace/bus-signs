@@ -25,15 +25,15 @@ inline uint8_t getAlign(std::string_view text) {
 unsigned long last = 0;
 WiFiServer server(SERVER_PORT);
 
-BayIndicator display1 = BayIndicator(D5, D6, D4);
-BayIndicator display2 = BayIndicator(D8, D7, D9);
+BayIndicator display1 = BayIndicator(D4, D5, D3);
+BayIndicator display2 = BayIndicator(D9, D8, D10);
 
 DotWidget widget1(&display1);
 DotWidget widget2(&display2);
 
 void setup() {
   Serial.begin(115200);
-  delay(1000);
+  delay(5000);
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
