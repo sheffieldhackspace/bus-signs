@@ -2,6 +2,9 @@
 
 Information server for the Infotec bay indicator display in the hackspace. Based on code from <https://github.com/ConnectedHumber/Bus-Terminal-Signs>.
 
+![Picture of the bay indicator display](images/bay-indicator-1.jpeg)
+![Picture of the bay indicator display without the enclosure](images/bay-indicator-2.jpeg)
+
 ## Hardware
 
 The microcontroller is a Seeed Studio XIAO ESP32C3. The display consists of two independent 192×9 LED matrix rows, each driven by 32 AS1100 chips.
